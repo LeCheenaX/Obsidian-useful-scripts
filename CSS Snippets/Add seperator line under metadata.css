@@ -1,0 +1,61 @@
+/* Written 100% by Lex with the assistance of AI */
+/* Add a separator line below the frontmatter */
+/*Replicate the following code for the bugs introduced by groove-3d*/
+
+.metadata-container::after {
+    content: "";
+    display: block; 
+    border-bottom: 1px solid #ccc; /* Customize the color and style of the line */
+    margin-top: 10px; /* Adjust the spacing as needed */
+}
+
+/* Dashed line */
+.dashed .metadata-container::after {
+    border-bottom: 1px dashed #ccc;
+}
+
+/* Dotted line */
+.dotted .metadata-container::after {
+    border-bottom: 1px dotted #ccc;
+}
+
+/* Double line */
+.double .metadata-container::after {
+    border-bottom: 3px double #ccc;
+}
+
+/* Double dotted line */
+.double-dotted .metadata-container::after {
+    border-bottom: 3px double #ccc;
+    border-bottom-style: dotted;
+}
+
+/* Gradient Border */
+.gradient-border .metadata-container::after {
+    border-bottom: 3px solid;
+    border-image: linear-gradient(to right, #f06, #4a90e2);
+    border-image-slice: 1;
+}
+
+/* Cannot Use Groove 3D because it will override the default and cannot repair */
+/* Groove 3D */
+/*
+.groove-3d .metadata-container  {
+    border: 0.5px groove rgba(128, 128, 128, 0.3); *//* Reduced transparency *//*
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.groove-3d .metadata-container::after {
+    content: none; 
+}
+.metadata-container:not(.groove-3d)::after {
+    content: "";
+}
+*/
+
+
+
+
+
+
+

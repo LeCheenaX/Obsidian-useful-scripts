@@ -1,0 +1,107 @@
+/* 
+Created by Lex
+Targets: "Show properties in editing mode by default","Hide properties in reading mode by default", "hide properties in editing mode when needed", "Show properties in reading mode when needed", 
+Prerequisites: Ensure that in Obsidian Settings > Editor > Display > Properties in Document is switched to Visible. 
+Reference: https://forum.obsidian.md/t/hide-show-properties-and-add-property-button-in-reading-mode/66209
+Other references: https://forum.obsidian.md/t/display-properties-from-yaml-within-note/69136/3
+https://forum.obsidian.md/t/hiding-specific-properties/81582
+https://www.reddit.com/r/ObsidianMD/comments/167hylo/how_to_partially_hide_properties/
+*/
+
+
+%% Refered Codes %%
+%% ============================================================= %%
+/* 
+Hide Properties in reading mode by default.
+Add "show_properties" to `css_classes` property to show them. */
+/*
+.workspace-leaf-content[data-mode="preview"]
+.markdown-preview-view
+.metadata-container{
+    display: none;
+}
+
+.workspace-leaf-content[data-mode="preview"]
+.markdown-preview-view.show_properties
+.metadata-container{
+    display: block;
+}
+*/
+
+/* 
+Show Properties in reading mode by default.
+Use "properties_hide" in `css_classes` property to hide them.*/
+/*
+.workspace-leaf-content[data-mode="preview"]
+.markdown-preview-view.properties_hide
+.metadata-container{
+    display: none;
+}
+*/
+
+
+%% Codes I use %%
+%% ============================================================= %%
+/* hide properties view in reading mode by default*/
+
+body {
+    --metadata-display-reading: none ; /* single line not working sometimes but will work after waiting */
+}
+
+.workspace-leaf-content[data-mode="preview"]
+.markdown-preview-view
+.metadata-container{
+    display: none ; /* single line not working sometimes but will work after waiting */
+}
+
+/* Use "show-property" in `css_classes` property to show them. */
+.workspace-leaf-content[data-mode="preview"]
+.markdown-preview-view.show-property
+.metadata-container{
+    display: unset  ; /* deleted !important for exclusion. other options: initial √×, block √, unset √, normal × */
+}
+
+/* Show Properties in live preview mode by default.
+Use "hide-property" in `css_classes` property to hide them. */
+.workspace-leaf-content[data-mode="source"]
+.markdown-source-view.hide-property
+.metadata-container{
+    display: none ;
+}
+
+
+%% Hide cssclasses when in reading mode  %%
+%% ============================================================= %%
+/* I don't know why but if we comment or delete the following "anything_is_ok" line the css setting for reading mode will not work */
+.markdown-preview-view {
+  & div[data-property-key="anything_is_ok"] {
+    display:none;
+  }
+}
+
+.markdown-preview-view .metadata-property[data-property-key="cssclasses"],
+.markdown-preview-view .metadata-property[data-property-key="cssclass"] {
+  display: none;
+}
+
+
+%% Hide a property "lex" in metadata or YAML if you specify "hide-lex" in cssclasses %%
+%% ============================================================= %%
+/* for reading mode */
+/* I don't know why but if we comment or delete the following "anything_is_ok" line the css setting for reading mode will not work */
+.markdown-preview-view.anything_is_ok {
+  & div[data-property-key="anything_is_ok"] {
+    display:none;
+  }
+}
+
+.markdown-preview-view.hide-lex .metadata-property[data-property-key="lex"]
+{
+  display: none;
+}
+
+/* for live-preview mode*/
+.is-live-preview.hide-lex .metadata-property[data-property-key="lex"] {
+  display: none;
+}
+

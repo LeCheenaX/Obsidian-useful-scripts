@@ -1,0 +1,29 @@
+/* Hide the button by default */
+.metadata-add-button {
+    display: none;
+}
+
+/* Live-preview only --- Show the button when hovering over the metadata container */
+.is-live-preview .metadata-container:hover .metadata-add-button {
+    display: inline-flex;
+    opacity: 1;
+}
+
+/* Add a delay to the button appearance */
+.is-live-preview .metadata-container:hover .metadata-add-button {
+    display: inline-flex;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    animation: fadeIn 1s forwards; /% the delay time%/
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+/* Hide the button when not hovering over the metadata container */
+.is-live-preview .metadata-container:not(:hover) .metadata-add-button {
+    display: none;
+}

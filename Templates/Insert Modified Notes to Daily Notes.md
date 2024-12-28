@@ -10,7 +10,6 @@ const dv = app.plugins.plugins["dataview"].api;
 let today = moment().format("YYYY-MM-DD");
 let DailyNote = moment(today).format("YYYY-MM-DD");
 let recordNote = DailyNote; 
-let note = app.vault.getAbstractFileByPath(`${RECORD_NOTE_FOLDER}/${recordNote}.md`);
 
 // Delay function
 function delay(ms) {
@@ -18,14 +17,14 @@ function delay(ms) {
 }
 
 new Notice("Autoupdate scripts are running! ", 3000);
-console.log("Autoupdate scripts are running! ");
+console.log("[Modified File Recorder] Autoupdate scripts are running! ");
 
 // Function to create a new note
 async function createNewNote() {
     await tp.file.create_new("", recordNote, false, RECORD_NOTE_FOLDER);
     new Notice(`Created new note ${recordNote} in folder ${RECORD_NOTE_FOLDER}.`, 5000);
-    console.log(`Created new note ${recordNote} in folder ${RECORD_NOTE_FOLDER}.`);
-    await delay(500);
+    console.log(`[Modified File Recorder] Created new note ${recordNote} in folder ${RECORD_NOTE_FOLDER}.`);
+    await delay(2000);
 }
 
 // Function to fetch query output
@@ -34,7 +33,7 @@ async function fetchQueryOutput() {
         return await dv.queryMarkdown(QUERY_STRING);
     } catch (error) {
         new Notice("⚠️ ERROR querying data: " + error.message, 5000);
-        console.log(`⚠️ ERROR: ${error}`);
+        console.log(`[Modified File Recorder] ⚠️ ERROR: ${error}`);
         throw error; // Rethrow to handle in the calling function
     }
 }
@@ -46,21 +45,21 @@ function processQueryOutput(queryOutput) {
 }
 
 // Function to read note content
-async function readDailyNoteContent() {
+async function readDailyNoteContent(note) {
     return await app.vault.read(note);
 }
 
 // Function to update the note
-async function updateNoteContent(content, recordData) {
+async function updateNoteContent(content, recordData, note) {
     const regex = new RegExp(`${START_POSITION}[\\s\\S]*?(?=${END_POSITION})`);
     if (regex.test(content)) {
         const newContent = content.replace(regex, `${START_POSITION}\n${recordData}\n`);
         await app.vault.modify(note, newContent);
         new Notice("Daily note auto updated! ", 2000);
-        console.log("Daily note auto updated! ");
+        console.log("[Modified File Recorder] Daily note auto updated! ");
     } else {
         new Notice("⚠️ ERROR updating note: " + recordNote + "! Check console log.", 5000);
-        console.log(`⚠️ ERROR: The given pattern "${START_POSITION} ... ${END_POSITION}" is not found in ${recordNote}! `);
+        console.log(`[Modified File Recorder] ⚠️ ERROR: The given pattern "${START_POSITION} ... ${END_POSITION}" is not found in ${recordNote}! `);
     }
 }
 
@@ -70,14 +69,15 @@ async function updateDailyNotes() {
         if (!tp.file.find_tfile(recordNote)) {
             await createNewNote();
         }
-
+        
+		let note = app.vault.getAbstractFileByPath(`${RECORD_NOTE_FOLDER}/${recordNote}.md`);
         const dvqueryOutput = await fetchQueryOutput();
         const recordData = processQueryOutput(dvqueryOutput.value);
-        const content = await readDailyNoteContent();
-        await updateNoteContent(content, recordData);
+        const content = await readDailyNoteContent(note);
+        await updateNoteContent(content, recordData, note);
     } catch (error) {
         new Notice("⚠️ An unexpected error occurred: " + error.message, 5000);
-        console.log(`⚠️ ERROR: ${error}`);
+        console.log(`[Modified File Recorder] ⚠️ An unexpected error occurred: ${error}`);
     }
 }
 
@@ -92,12 +92,12 @@ function debounce(func, wait) {
 
 // Set up event listener to run the update function on every file save with debounce
 app.vault.on('modify', debounce(async (file) => {
-    console.log(`Detected File Change: ${file.name}`);
+    console.log(`[Modified File Recorder] Detected File Change: ${file.name}`);
     if (file.name === `${recordNote}.md`) {
         await delay(200);
     } else {
+        console.log(`[Modified File Recorder] Try updating ${recordNote}.md`);
         await updateDailyNotes();
-        console.log(`Try updating ${recordNote}.md`);
     }
 }, 60000)); // 60 seconds debounce
 

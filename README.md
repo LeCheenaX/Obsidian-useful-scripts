@@ -28,6 +28,7 @@ By default, the record folder is "Logs/Daily Notes". You should adjust it to you
 #### The Query String
 You can seamlessly move your dataview query here but deleting the line-breaks. 
 By default, will use the data in this dataview query:
+````
 ```dataview
 table WITHOUT ID
 file.link as "Modified Notes", file.mtime as "Edit Time"
@@ -36,14 +37,16 @@ where file.mday = date(today)
 sort file.mtime asc
 limit 32
 ```
-
+````
 #### Start Position and End Position
 This string defines where to insert the data. Not only the admonition plugin is supported, but for all other plugins. 
 By default, this will insert a table of data to an admonition-callout:
+````
 ```ad-note
 title: Modified Notes on this day
 collapse: close
 ```
+````
 Showcase:
 ![image](https://github.com/user-attachments/assets/58e1ac58-acf6-498e-8832-dfe3fa0677fe)
 

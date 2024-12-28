@@ -12,15 +12,15 @@ The template is modular that:
 3. You can customize the query to collect the code. The query is the same as `Dataview Query`. 
 
 ### How to use this template?
+Prerequisites: 
 1. You need to install the Templater plugin and Dataview plugin
 2. In setting of Templater plugin, ensure that the folder template is enabled to auto-enforce daily note template to new created daily notes![image](https://github.com/user-attachments/assets/5edefd02-e065-46c6-b170-6f3c81eeb055)
-
 3. You need to specify a folder to store your templates in the setting of Templater plugin
-4. Create a new `.md` file in your template folder
-5. Copy the template below and paste it into your `.md` file that just created
-6. Modify the `Constants`:`RECORD_NOTE_FOLDER`,`QUERY_STRING`,`START_POSITION`,`END_POSITION`
-7. In the setting of Templater plugin, add this template as "start-up template"![image](https://github.com/user-attachments/assets/4448ea44-9cc3-4ae8-b86e-f21381e67868)
 
+Steps:
+1. Copy and Paste the `Insert Modified Notes to Daily Notes.md` to your template folder
+2. Modify the `Constants`:`RECORD_NOTE_FOLDER`,`QUERY_STRING`,`START_POSITION`,`END_POSITION`
+3. In the setting of Templater plugin, add this template as "start-up template"![image](https://github.com/user-attachments/assets/4448ea44-9cc3-4ae8-b86e-f21381e67868)
 
 #### The Record Note Folder
 By default, the record folder is "Logs/Daily Notes". You should adjust it to your daily note folder. 
@@ -44,7 +44,7 @@ By default, this will insert a table of data to an admonition-callout:
 title: Modified Notes on this day
 collapse: close
 ```
-Effect:
+Showcase:
 ![image](https://github.com/user-attachments/assets/58e1ac58-acf6-498e-8832-dfe3fa0677fe)
 
 It's also recommended to place it under a title(Require this title exist in your daily note template):
@@ -52,7 +52,7 @@ It's also recommended to place it under a title(Require this title exist in your
 START_POSITION = "#### Dataview Query";
 END_POSITION = "#### Dataview JS";
 ```
-Effect:
+Showcase:
 ![image](https://github.com/user-attachments/assets/57aa7556-265d-4d5d-b739-4ea9863b1dea)
 
 If you want to insert to the end of your daily note, just leave `END_POSITION` blank. 

@@ -59,3 +59,15 @@ Showcase:
 ![image](https://github.com/user-attachments/assets/57aa7556-265d-4d5d-b739-4ea9863b1dea)
 
 If you want to insert to the end of your daily note, just leave `END_POSITION` blank. 
+
+### Daily Note Format
+Ensure the format is corresponding to all cases below:
+1. Your current daily notes
+2. Plugins that may modify daily note (if you have, such as Periodic Note plugin)
+3. Templates that may modify daily note (if you have, such as `folder template`/`startup template` in templater plugin)
+
+By default, the format will be "YYYY-MM-DD", which will target on daily note with file name: `2024-12-23.md` for example. 
+
+Misplacing the daily note format may cause issues such as templater could not fetch the target note. 
+
+Also be of caution if you have a template file that will auto-rename the file name of your daily note. 

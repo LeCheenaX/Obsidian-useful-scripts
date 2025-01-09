@@ -1,15 +1,17 @@
 <%*
 // Configuration Constants
-const RECORD_NOTE_FOLDER = "日志/Daily Notes";
-const QUERY_STRING = `table WITHOUT ID file.link as "当日编辑", file.mtime as "编辑时间" from !"MyTestFolder" where file.mday = date(today) sort file.mtime asc limit 32`;
-const START_POSITION = "title: 当天编辑的文件\ncollapse: close"; 
-const END_POSITION = "````"; 
-const dv = app.plugins.plugins["dataview"].api;
+const RECORD_NOTE_FOLDER = "Logs/Daily Notes";
+const QUERY_STRING = `table WITHOUT ID file.link as "Modified Notes", file.mtime as "Edit Time" from !"MyTestFolder" where file.mday = date(today) sort file.mtime asc limit 32`;
+const START_POSITION = "title: Modified Notes on this day\ncollapse: close"; 
+const END_POSITION = "````";
+const DAILY_NOTE_FORMAT = "YYYY-MM-DD";
+
 
 // Get today's date in ISO format
 let today = moment().format("YYYY-MM-DD");
-let DailyNote = moment(today).format("YYYY-MM-DD");
+let DailyNote = moment(today).format(DAILY_NOTE_FORMAT);
 let recordNote = DailyNote; 
+const dv = app.plugins.plugins["dataview"].api;
 
 // Delay function
 function delay(ms) {

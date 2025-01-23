@@ -1,28 +1,23 @@
 <%*
 // Configuration Constants
-const RECORD_NOTE_FOLDER = "Logs/Daily Notes";
-const QUERY_STRING = `table WITHOUT ID file.link as "Modified Notes", file.mtime as "Edit Time" from !"MyTestFolder" where file.mday = date(today) sort file.mtime asc limit 32`;
-const START_POSITION = "title: Modified Notes on this day\ncollapse: close"; 
+const RECORD_NOTE_FOLDER = "日志/Daily Notes";
+const QUERY_STRING = `table WITHOUT ID file.link as "当日编辑", file.mtime as "编辑时间" from !"MyTestFolder" where file.mday = date(today) sort file.mtime asc limit 32`;
+const START_POSITION = "title: 当天编辑的文件\ncollapse: close";
 const END_POSITION = "````";
 const DAILY_NOTE_FORMAT = "YYYY-MM-DD";
 
-
-// Get today's date in ISO format
-let today = moment().format("YYYY-MM-DD");
-let DailyNote = moment(today).format(DAILY_NOTE_FORMAT);
-let recordNote = DailyNote; 
+// Initialization
 const dv = app.plugins.plugins["dataview"].api;
+new Notice("Autoupdate scripts are running! ", 3000);
+console.log("[Modified File Recorder] Autoupdate scripts are running! ");
 
 // Delay function
 function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-new Notice("Autoupdate scripts are running! ", 3000);
-console.log("[Modified File Recorder] Autoupdate scripts are running! ");
-
 // Function to create a new note
-async function createNewNote() {
+async function createNewNote(recordNote) {
     await tp.file.create_new("", recordNote, false, RECORD_NOTE_FOLDER);
     new Notice(`Created new note ${recordNote} in folder ${RECORD_NOTE_FOLDER}.`, 5000);
     console.log(`[Modified File Recorder] Created new note ${recordNote} in folder ${RECORD_NOTE_FOLDER}.`);
@@ -36,7 +31,7 @@ async function fetchQueryOutput() {
     } catch (error) {
         new Notice("⚠️ ERROR querying data: " + error.message, 5000);
         console.log(`[Modified File Recorder] ⚠️ ERROR: ${error}`);
-        throw error; // Rethrow to handle in the calling function
+        throw error;
     }
 }
 
@@ -61,18 +56,22 @@ async function updateNoteContent(content, recordData, note) {
         console.log("[Modified File Recorder] Daily note auto updated! ");
     } else {
         new Notice("⚠️ ERROR updating note: " + recordNote + "! Check console log.", 5000);
-        console.log(`[Modified File Recorder] ⚠️ ERROR: The given pattern "${START_POSITION} ... ${END_POSITION}" is not found in ${recordNote}! `);
+        console.log(`[Modified File Recorder] ⚠️ ERROR: The given pattern "${START_POSITION} ... ${END_POSITION}" is not found in ${recordNote}!`);
     }
 }
 
 // Main function to update daily notes
 async function updateDailyNotes() {
     try {
+        // Update today's date and recordNote dynamically
+        let today = moment().format("YYYY-MM-DD"); // MODIFIED: Use let instead of const
+        let recordNote = moment(today).format(DAILY_NOTE_FORMAT); // MODIFIED: Use let instead of const
+
         if (!tp.file.find_tfile(recordNote)) {
-            await createNewNote();
+            await createNewNote(recordNote);
         }
-        
-		let note = app.vault.getAbstractFileByPath(`${RECORD_NOTE_FOLDER}/${recordNote}.md`);
+
+        let note = app.vault.getAbstractFileByPath(`${RECORD_NOTE_FOLDER}/${recordNote}.md`);
         const dvqueryOutput = await fetchQueryOutput();
         const recordData = processQueryOutput(dvqueryOutput.value);
         const content = await readDailyNoteContent(note);
@@ -95,6 +94,11 @@ function debounce(func, wait) {
 // Set up event listener to run the update function on every file save with debounce
 app.vault.on('modify', debounce(async (file) => {
     console.log(`[Modified File Recorder] Detected File Change: ${file.name}`);
+
+    // Update today's date and recordNote dynamically
+    let today = moment().format("YYYY-MM-DD"); // MODIFIED: Use let instead of const
+    let recordNote = moment(today).format(DAILY_NOTE_FORMAT); // MODIFIED: Use let instead of const
+
     if (file.name === `${recordNote}.md`) {
         await delay(200);
     } else {
